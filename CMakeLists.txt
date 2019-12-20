@@ -47,7 +47,7 @@ configure_file(libserialport.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/libserialpor
 
 ### configure config.h
 
-if(NOT WINDOWS)
+if(NOT WIN32)
 	set(SP_API  "__attribute__((visibility(\"default\")))" )
 	set(SP_PRIV "__attribute__((visibility(\"hidden\")))" )
 else()
@@ -88,14 +88,29 @@ configure_file(cmake.config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 #set properties
 
+if(APPLE)
+    find_library(IOKIT IOKit)
+    find_library(FOUNDATION Foundation)
+    target_link_libraries(libserialport ${IOKIT} ${FOUNDATION})
+endif()
+
 set_target_properties(libserialport PROPERTIES PUBLIC_HEADER "libserialport.h")
 set_target_properties(libserialport PROPERTIES VERSION ${SP_PACKAGE_VERSION_STRING})
-# SOVERSION ${SP_LIB_VERSION_STRING_CLEAN})
-
 set_target_properties(libserialport PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-#prevent liblibserialport.so library name
+#prevent liblibserialport.so
 set_target_properties(libserialport PROPERTIES OUTPUT_NAME "serialport") 
 
-
 install(TARGETS libserialport)
+
+install(TARGETS libserialport
+    EXPORT libserialport-config
+    )
+
+export(TARGETS libserialport
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/libdi2-config.cmake"
+    )
+
+install(EXPORT libserialport-config
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}"
+    )
