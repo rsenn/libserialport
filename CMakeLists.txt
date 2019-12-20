@@ -84,7 +84,7 @@ if(SERIAL_STRUCT_SIZE)
 	set(HAVE_STRUCT_SERIAL_STRUCT 1)
 endif()
 
-configure_file(config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
+configure_file(cmake.config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 #set properties
 
