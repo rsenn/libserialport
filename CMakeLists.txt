@@ -41,9 +41,9 @@ string(REGEX REPLACE "#undef ([^\r\n]*)" "#define \\1 @\\1@"  SERIAL_PORT_HEADER
 string(REGEX REPLACE "(@[^ ]*VERSION_STRING@)" "\"\\1\""  SERIAL_PORT_HEADER_POST2 "${SERIAL_PORT_HEADER_POST}")
 
 #write modified file
-file(WRITE libserialport.h.cmake.in "${SERIAL_PORT_HEADER_POST2}")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/libserialport.h.cmake.in "${SERIAL_PORT_HEADER_POST2}")
 #and configure it
-configure_file(libserialport.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/libserialport.h)
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/libserialport.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/libserialport.h)
 
 ### configure config.h
 
