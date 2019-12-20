@@ -92,6 +92,8 @@ if(APPLE)
     find_library(IOKIT IOKit)
     find_library(FOUNDATION Foundation)
     target_link_libraries(libserialport ${IOKIT} ${FOUNDATION})
+elseif(WIN32)
+    target_link_libraries(libserialport setupapi)
 endif()
 
 set_target_properties(libserialport PROPERTIES PUBLIC_HEADER "libserialport.h")
