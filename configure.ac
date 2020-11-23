@@ -29,7 +29,7 @@ m4_define([sp_package_version], [sp_package_version_major.sp_package_version_min
 
 AC_INIT([libserialport], [sp_package_version], [martin-libserialport@earth.li],
 	[libserialport], [http://sigrok.org/wiki/Libserialport])
-AC_CONFIG_HEADERS([config.h libserialport.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([autostuff])
 AC_CONFIG_AUX_DIR([autostuff])
 
@@ -88,7 +88,7 @@ AC_DEFINE_UNQUOTED([SP_LIB_VERSION_AGE], [$SP_LIB_VERSION_AGE], [.])
 AC_DEFINE_UNQUOTED([SP_LIB_VERSION_STRING], ["$SP_LIB_VERSION"], [.])
 
 AM_CONDITIONAL([LINUX], [test -z "${host_os##linux*}" || test -z "${host_os##uclinux*}"])
-AM_CONDITIONAL([WIN32], [test -z "${host_os##mingw*}" || test -z "${host_os##cygwin*}"])
+AM_CONDITIONAL([WIN32], [test -z "${host_os##mingw*}"])
 AM_CONDITIONAL([MACOSX], [test -z "${host_os##darwin*}"])
 AM_CONDITIONAL([FREEBSD], [test -z "${host_os##freebsd*}"])
 
@@ -101,7 +101,7 @@ AC_SUBST([SP_PKGLIBS])
 AM_COND_IF([MACOSX], [AC_CHECK_HEADER([IOKit/IOKitLib.h], [],
 	[AC_MSG_ERROR([IOKit/IOKitLib.h not found])])])
 
-AS_CASE([$host_os], [linux*|darwin*|mingw*|cygwin*|freebsd*],, [
+AS_CASE([$host_os], [linux*|darwin*|mingw*|freebsd*],, [
 	AC_DEFINE([NO_ENUMERATION], [1], [Enumeration is unsupported.])
 	AC_DEFINE([NO_PORT_METADATA], [1], [Port metadata is unavailable.])
 ])
@@ -128,6 +128,14 @@ AC_CHECK_TYPES([struct serial_struct],,, [[#include <linux/serial.h>]])
 
 # Check for realpath().
 AC_CHECK_FUNC([realpath], [AC_DEFINE(HAVE_REALPATH, 1, [realpath is available.])], [])
+
+# Check for flock().
+AC_CHECK_HEADER([sys/file.h], [AC_DEFINE(HAVE_SYS_FILE_H, 1, [sys/file.h is available.])], [])
+AC_CHECK_FUNC([flock], [AC_DEFINE(HAVE_FLOCK, 1, [flock is available.])], [])
+
+# Check for clock_gettime().
+AC_CHECK_FUNC([clock_gettime],
+	[AC_DEFINE(HAVE_CLOCK_GETTIME, 1, [clock_gettime is available.])], [])
 
 AC_CACHE_CHECK([for visibility control], [sp_cv_visibility_control], [
 	sp_saved_CFLAGS=$CFLAGS

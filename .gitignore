@@ -12,7 +12,11 @@
 /configure
 /configure.lineno
 /libserialport-*.tar.*
-/libserialport.h
 /libserialport.pc
 /libtool
 stamp-h?
+.vs/
+Debug/
+Release/
+x64/
+*.vcxproj.user
