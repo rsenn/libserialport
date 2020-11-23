@@ -93,6 +93,12 @@ else()
 	set(SP_PRIV "")
 endif()
 
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+    unset(SP_API)
+    unset(SP_PRIV)
+endif()
+
 configure_file(cmake.config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 #this define is needed for config.h inclusion
 target_compile_options(libserialport PUBLIC -DLIBSERIALPORT_ATBUILD)
