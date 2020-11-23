@@ -1,30 +1,38 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* clock_gettime is available. */
+#cmakedefine HAVE_CLOCK_GETTIME @HAVE_CLOCK_GETTIME@
+
 /* Define to 1 if you have the declaration of `BOTHER', and to 0 if you don't.
    */
 #cmakedefine HAVE_DECL_BOTHER @HAVE_DECL_BOTHER@
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
-#undef HAVE_DLFCN_H
+#cmakedefine HAVE_DLFCN_H @HAVE_DLFCN_H@
+
+/* flock is available. */
+#cmakedefine HAVE_FLOCK @HAVE_FLOCK@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#undef HAVE_INTTYPES_H
+#cmakedefine HAVE_INTTYPES_H @HAVE_INTTYPES_H@
 
 /* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
+#cmakedefine HAVE_MEMORY_H @HAVE_MEMORY_H@
+
+/* realpath is available. */
+#cmakedefine HAVE_REALPATH @HAVE_REALPATH@
 
 /* Define to 1 if you have the <stdint.h> header file. */
-//#undef HAVE_STDINT_H
 #cmakedefine HAVE_STDINT_H @HAVE_STDINT_H@
 
 /* Define to 1 if you have the <stdlib.h> header file. */
-#undef HAVE_STDLIB_H
+#cmakedefine HAVE_STDLIB_H @HAVE_STDLIB_H@
 
 /* Define to 1 if you have the <strings.h> header file. */
-#undef HAVE_STRINGS_H
+#cmakedefine HAVE_STRINGS_H @HAVE_STRINGS_H@
 
 /* Define to 1 if you have the <string.h> header file. */
-#undef HAVE_STRING_H
+#cmakedefine HAVE_STRING_H @HAVE_STRING_H@
 
 /* Define to 1 if the system has the type `struct serial_struct'. */
 #cmakedefine HAVE_STRUCT_SERIAL_STRUCT @HAVE_STRUCT_SERIAL_STRUCT@
@@ -47,17 +55,19 @@
 /* Define to 1 if the system has the type `struct termiox'. */
 #cmakedefine HAVE_STRUCT_TERMIOX @HAVE_STRUCT_TERMIOX@
 
+/* sys/file.h is available. */
+#cmakedefine HAVE_SYS_FILE_H @HAVE_SYS_FILE_H@
+
 /* Define to 1 if you have the <sys/stat.h> header file. */
-#undef HAVE_SYS_STAT_H
+#cmakedefine HAVE_SYS_STAT_H @HAVE_SYS_STAT_H@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #cmakedefine HAVE_SYS_TYPES_H @HAVE_SYS_TYPES_H@
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#undef HAVE_UNISTD_H
+#cmakedefine HAVE_UNISTD_H @HAVE_UNISTD_H@
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* Enumeration is unsupported. */
@@ -82,7 +92,7 @@
 #undef PACKAGE_URL
 
 /* Define to the version of this package. */
-#undef PACKAGE_VERSION
+#define PACKAGE_VERSION "@SP_PACKAGE_VERSION_STRING@"
 
 /* Macro preceding public API functions */
 #define SP_API @SP_API@
