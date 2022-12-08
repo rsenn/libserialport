@@ -23,6 +23,8 @@
 
 #include "libserialport_internal.h"
 
+#undef USE_TERMIOX
+
 static const struct std_baudrate std_baudrates[] = {
 #ifdef _WIN32
 	/*

@@ -108,6 +108,10 @@
 #endif
 #endif
 
+#ifdef USE_TERMIOX
+#warning USE_TERMIOX
+#endif
+
 /* TIOCINQ/TIOCOUTQ is not available everywhere. */
 #if !defined(TIOCINQ) && defined(FIONREAD)
 #define TIOCINQ FIONREAD
