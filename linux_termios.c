@@ -38,92 +38,92 @@
 #include <linux/termios.h>
 #include "linux_termios.h"
 
-SP_PRIV unsigned long get_termios_get_ioctl(void)
-{
+SP_PRIV unsigned long
+get_termios_get_ioctl(void) {
 #ifdef HAVE_STRUCT_TERMIOS2
-	return TCGETS2;
+  return TCGETS2;
 #else
-	return TCGETS;
+  return TCGETS;
 #endif
 }
 
-SP_PRIV unsigned long get_termios_set_ioctl(void)
-{
+SP_PRIV unsigned long
+get_termios_set_ioctl(void) {
 #ifdef HAVE_STRUCT_TERMIOS2
-	return TCSETS2;
+  return TCSETS2;
 #else
-	return TCSETS;
+  return TCSETS;
 #endif
 }
 
-SP_PRIV size_t get_termios_size(void)
-{
+SP_PRIV size_t
+get_termios_size(void) {
 #ifdef HAVE_STRUCT_TERMIOS2
-	return sizeof(struct termios2);
+  return sizeof(struct termios2);
 #else
-	return sizeof(struct termios);
+  return sizeof(struct termios);
 #endif
 }
 
-#if (defined(HAVE_TERMIOS_SPEED) || defined(HAVE_TERMIOS2_SPEED)) && HAVE_DECL_BOTHER
-SP_PRIV int get_termios_speed(void *data)
-{
+#if(defined(HAVE_TERMIOS_SPEED) || defined(HAVE_TERMIOS2_SPEED)) && HAVE_DECL_BOTHER
+SP_PRIV int
+get_termios_speed(void* data) {
 #ifdef HAVE_STRUCT_TERMIOS2
-	struct termios2 *term = (struct termios2 *) data;
+  struct termios2* term = (struct termios2*)data;
 #else
-	struct termios *term = (struct termios *) data;
+  struct termios* term = (struct termios*)data;
 #endif
-	if (term->c_ispeed != term->c_ospeed)
-		return -1;
-	else
-		return term->c_ispeed;
+  if(term->c_ispeed != term->c_ospeed)
+    return -1;
+  else
+    return term->c_ispeed;
 }
 
-SP_PRIV void set_termios_speed(void *data, int speed)
-{
+SP_PRIV void
+set_termios_speed(void* data, int speed) {
 #ifdef HAVE_STRUCT_TERMIOS2
-	struct termios2 *term = (struct termios2 *) data;
+  struct termios2* term = (struct termios2*)data;
 #else
-	struct termios *term = (struct termios *) data;
+  struct termios* term = (struct termios*)data;
 #endif
-	term->c_cflag &= ~CBAUD;
-	term->c_cflag |= BOTHER;
-	term->c_ispeed = term->c_ospeed = speed;
+  term->c_cflag &= ~CBAUD;
+  term->c_cflag |= BOTHER;
+  term->c_ispeed = term->c_ospeed = speed;
 }
 #endif
 
 #ifdef HAVE_STRUCT_TERMIOX
-SP_PRIV size_t get_termiox_size(void)
-{
-	return sizeof(struct termiox);
+SP_PRIV size_t
+get_termiox_size(void) {
+  return sizeof(struct termiox);
 }
 
-SP_PRIV int get_termiox_flow(void *data, int *rts, int *cts, int *dtr, int *dsr)
-{
-	struct termiox *termx = (struct termiox *) data;
-	int flags = 0;
+SP_PRIV int
+get_termiox_flow(void* data, int* rts, int* cts, int* dtr, int* dsr) {
+  struct termiox* termx = (struct termiox*)data;
+  int flags = 0;
 
-	*rts = (termx->x_cflag & RTSXOFF);
-	*cts = (termx->x_cflag & CTSXON);
-	*dtr = (termx->x_cflag & DTRXOFF);
-	*dsr = (termx->x_cflag & DSRXON);
+  *rts = (termx->x_cflag & RTSXOFF);
+  *cts = (termx->x_cflag & CTSXON);
+  *dtr = (termx->x_cflag & DTRXOFF);
+  *dsr = (termx->x_cflag & DSRXON);
 
-	return flags;
+  return flags;
 }
 
-SP_PRIV void set_termiox_flow(void *data, int rts, int cts, int dtr, int dsr)
-{
-	struct termiox *termx = (struct termiox *) data;
+SP_PRIV void
+set_termiox_flow(void* data, int rts, int cts, int dtr, int dsr) {
+  struct termiox* termx = (struct termiox*)data;
 
-	termx->x_cflag &= ~(RTSXOFF | CTSXON | DTRXOFF | DSRXON);
+  termx->x_cflag &= ~(RTSXOFF | CTSXON | DTRXOFF | DSRXON);
 
-	if (rts)
-		termx->x_cflag |= RTSXOFF;
-	if (cts)
-		termx->x_cflag |= CTSXON;
-	if (dtr)
-		termx->x_cflag |= DTRXOFF;
-	if (dsr)
-		termx->x_cflag |= DSRXON;
+  if(rts)
+    termx->x_cflag |= RTSXOFF;
+  if(cts)
+    termx->x_cflag |= CTSXON;
+  if(dtr)
+    termx->x_cflag |= DTRXOFF;
+  if(dsr)
+    termx->x_cflag |= DSRXON;
 }
 #endif

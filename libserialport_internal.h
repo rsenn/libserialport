@@ -30,7 +30,7 @@
 /* These feature test macros must appear before other headers.*/
 #if defined(__linux__) || defined(__CYGWIN__)
 /* For timeradd, timersub, timercmp, realpath. */
-#define _BSD_SOURCE 1 /* for glibc < 2.19 */
+#define _BSD_SOURCE 1     /* for glibc < 2.19 */
 #define _DEFAULT_SOURCE 1 /* for glibc >= 2.20 */
 /* For clock_gettime and associated types. */
 #define _POSIX_C_SOURCE 199309L
@@ -65,8 +65,7 @@
 #include <setupapi.h>
 #include <cfgmgr32.h>
 #undef DEFINE_GUID
-#define DEFINE_GUID(name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
-	static const GUID name = { l,w1,w2,{ b1,b2,b3,b4,b5,b6,b7,b8 } }
+#define DEFINE_GUID(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) static const GUID name = {l, w1, w2, {b1, b2, b3, b4, b5, b6, b7, b8}}
 #include <usbioctl.h>
 #include <usbiodef.h>
 /* The largest size that can be passed to WriteFile() safely
@@ -131,62 +130,62 @@
 #endif
 
 /* Non-standard baudrates are not available everywhere. */
-#if (defined(HAVE_TERMIOS_SPEED) || defined(HAVE_TERMIOS2_SPEED)) && HAVE_DECL_BOTHER
+#if(defined(HAVE_TERMIOS_SPEED) || defined(HAVE_TERMIOS2_SPEED)) && HAVE_DECL_BOTHER
 #define USE_TERMIOS_SPEED
 #endif
 
 struct sp_port {
-	char *name;
-	char *description;
-	enum sp_transport transport;
-	int usb_bus;
-	int usb_address;
-	int usb_vid;
-	int usb_pid;
-	char *usb_manufacturer;
-	char *usb_product;
-	char *usb_serial;
-	char *bluetooth_address;
+  char* name;
+  char* description;
+  enum sp_transport transport;
+  int usb_bus;
+  int usb_address;
+  int usb_vid;
+  int usb_pid;
+  char* usb_manufacturer;
+  char* usb_product;
+  char* usb_serial;
+  char* bluetooth_address;
 #ifdef _WIN32
-	char *usb_path;
-	HANDLE hdl;
-	COMMTIMEOUTS timeouts;
-	OVERLAPPED write_ovl;
-	OVERLAPPED read_ovl;
-	OVERLAPPED wait_ovl;
-	DWORD events;
-	BYTE *write_buf;
-	DWORD write_buf_size;
-	BOOL writing;
-	BOOL wait_running;
+  char* usb_path;
+  HANDLE hdl;
+  COMMTIMEOUTS timeouts;
+  OVERLAPPED write_ovl;
+  OVERLAPPED read_ovl;
+  OVERLAPPED wait_ovl;
+  DWORD events;
+  BYTE* write_buf;
+  DWORD write_buf_size;
+  BOOL writing;
+  BOOL wait_running;
 #else
-	int fd;
+  int fd;
 #endif
 };
 
 struct sp_port_config {
-	int baudrate;
-	int bits;
-	enum sp_parity parity;
-	int stopbits;
-	enum sp_rts rts;
-	enum sp_cts cts;
-	enum sp_dtr dtr;
-	enum sp_dsr dsr;
-	enum sp_xonxoff xon_xoff;
+  int baudrate;
+  int bits;
+  enum sp_parity parity;
+  int stopbits;
+  enum sp_rts rts;
+  enum sp_cts cts;
+  enum sp_dtr dtr;
+  enum sp_dsr dsr;
+  enum sp_xonxoff xon_xoff;
 };
 
 struct port_data {
 #ifdef _WIN32
-	DCB dcb;
+  DCB dcb;
 #else
-	struct termios term;
-	int controlbits;
-	int termiox_supported;
-	int rts_flow;
-	int cts_flow;
-	int dtr_flow;
-	int dsr_flow;
+  struct termios term;
+  int controlbits;
+  int termiox_supported;
+  int rts_flow;
+  int cts_flow;
+  int dtr_flow;
+  int dsr_flow;
 #endif
 };
 
@@ -199,117 +198,142 @@ typedef int event_handle;
 /* Standard baud rates. */
 #ifdef _WIN32
 #define BAUD_TYPE DWORD
-#define BAUD(n) {CBR_##n, n}
+#define BAUD(n) \
+  { CBR_##n, n }
 #else
 #define BAUD_TYPE speed_t
-#define BAUD(n) {B##n, n}
+#define BAUD(n) \
+  { B##n, n }
 #endif
 
 struct std_baudrate {
-	BAUD_TYPE index;
-	int value;
+  BAUD_TYPE index;
+  int value;
 };
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
-extern void (*sp_debug_handler)(const char *format, ...);
+extern void (*sp_debug_handler)(const char* format, ...);
 
 /* Debug output macros. */
-#define DEBUG_FMT(fmt, ...) do { \
-	if (sp_debug_handler) \
-		sp_debug_handler(fmt ".\n", __VA_ARGS__); \
-} while (0)
+#define DEBUG_FMT(fmt, ...) \
+  do { \
+    if(sp_debug_handler) \
+      sp_debug_handler(fmt ".\n", __VA_ARGS__); \
+  } while(0)
 #define DEBUG(msg) DEBUG_FMT(msg, NULL)
 #define DEBUG_ERROR(err, msg) DEBUG_FMT("%s returning " #err ": " msg, __func__)
-#define DEBUG_FAIL(msg) do {               \
-	char *errmsg = sp_last_error_message(); \
-	DEBUG_FMT("%s returning SP_ERR_FAIL: " msg ": %s", __func__, errmsg); \
-	sp_free_error_message(errmsg); \
-} while (0);
-#define RETURN() do { \
-	DEBUG_FMT("%s returning", __func__); \
-	return; \
-} while (0)
-#define RETURN_CODE(x) do { \
-	DEBUG_FMT("%s returning " #x, __func__); \
-	return x; \
-} while (0)
-#define RETURN_CODEVAL(x) do { \
-	switch (x) { \
-	case SP_OK: RETURN_CODE(SP_OK); \
-	case SP_ERR_ARG: RETURN_CODE(SP_ERR_ARG); \
-	case SP_ERR_FAIL: RETURN_CODE(SP_ERR_FAIL); \
-	case SP_ERR_MEM: RETURN_CODE(SP_ERR_MEM); \
-	case SP_ERR_SUPP: RETURN_CODE(SP_ERR_SUPP); \
-	default: RETURN_CODE(SP_ERR_FAIL); \
-	} \
-} while (0)
+#define DEBUG_FAIL(msg) \
+  do { \
+    char* errmsg = sp_last_error_message(); \
+    DEBUG_FMT("%s returning SP_ERR_FAIL: " msg ": %s", __func__, errmsg); \
+    sp_free_error_message(errmsg); \
+  } while(0);
+#define RETURN() \
+  do { \
+    DEBUG_FMT("%s returning", __func__); \
+    return; \
+  } while(0)
+#define RETURN_CODE(x) \
+  do { \
+    DEBUG_FMT("%s returning " #x, __func__); \
+    return x; \
+  } while(0)
+#define RETURN_CODEVAL(x) \
+  do { \
+    switch(x) { \
+      case SP_OK: RETURN_CODE(SP_OK); \
+      case SP_ERR_ARG: RETURN_CODE(SP_ERR_ARG); \
+      case SP_ERR_FAIL: RETURN_CODE(SP_ERR_FAIL); \
+      case SP_ERR_MEM: RETURN_CODE(SP_ERR_MEM); \
+      case SP_ERR_SUPP: RETURN_CODE(SP_ERR_SUPP); \
+      default: RETURN_CODE(SP_ERR_FAIL); \
+    } \
+  } while(0)
 #define RETURN_OK() RETURN_CODE(SP_OK);
-#define RETURN_ERROR(err, msg) do { \
-	DEBUG_ERROR(err, msg); \
-	return err; \
-} while (0)
-#define RETURN_FAIL(msg) do { \
-	DEBUG_FAIL(msg); \
-	return SP_ERR_FAIL; \
-} while (0)
-#define RETURN_INT(x) do { \
-	int _x = x; \
-	DEBUG_FMT("%s returning %d", __func__, _x); \
-	return _x; \
-} while (0)
-#define RETURN_STRING(x) do { \
-	char *_x = x; \
-	DEBUG_FMT("%s returning %s", __func__, _x); \
-	return _x; \
-} while (0)
-#define RETURN_POINTER(x) do { \
-	void *_x = x; \
-	DEBUG_FMT("%s returning %p", __func__, _x); \
-	return _x; \
-} while (0)
-#define SET_ERROR(val, err, msg) do { DEBUG_ERROR(err, msg); val = err; } while (0)
-#define SET_FAIL(val, msg) do { DEBUG_FAIL(msg); val = SP_ERR_FAIL; } while (0)
+#define RETURN_ERROR(err, msg) \
+  do { \
+    DEBUG_ERROR(err, msg); \
+    return err; \
+  } while(0)
+#define RETURN_FAIL(msg) \
+  do { \
+    DEBUG_FAIL(msg); \
+    return SP_ERR_FAIL; \
+  } while(0)
+#define RETURN_INT(x) \
+  do { \
+    int _x = x; \
+    DEBUG_FMT("%s returning %d", __func__, _x); \
+    return _x; \
+  } while(0)
+#define RETURN_STRING(x) \
+  do { \
+    char* _x = x; \
+    DEBUG_FMT("%s returning %s", __func__, _x); \
+    return _x; \
+  } while(0)
+#define RETURN_POINTER(x) \
+  do { \
+    void* _x = x; \
+    DEBUG_FMT("%s returning %p", __func__, _x); \
+    return _x; \
+  } while(0)
+#define SET_ERROR(val, err, msg) \
+  do { \
+    DEBUG_ERROR(err, msg); \
+    val = err; \
+  } while(0)
+#define SET_FAIL(val, msg) \
+  do { \
+    DEBUG_FAIL(msg); \
+    val = SP_ERR_FAIL; \
+  } while(0)
 #define TRACE(fmt, ...) DEBUG_FMT("%s(" fmt ") called", __func__, __VA_ARGS__)
 #define TRACE_VOID() DEBUG_FMT("%s() called", __func__)
 
-#define TRY(x) do { int retval = x; if (retval != SP_OK) RETURN_CODEVAL(retval); } while (0)
+#define TRY(x) \
+  do { \
+    int retval = x; \
+    if(retval != SP_OK) \
+      RETURN_CODEVAL(retval); \
+  } while(0)
 
-SP_PRIV struct sp_port **list_append(struct sp_port **list, const char *portname);
+SP_PRIV struct sp_port** list_append(struct sp_port** list, const char* portname);
 
 /* OS-specific Helper functions. */
-SP_PRIV enum sp_return get_port_details(struct sp_port *port);
-SP_PRIV enum sp_return list_ports(struct sp_port ***list);
+SP_PRIV enum sp_return get_port_details(struct sp_port* port);
+SP_PRIV enum sp_return list_ports(struct sp_port*** list);
 
 /* Timing abstraction */
 
 struct time {
 #ifdef _WIN32
-	int64_t ticks;
+  int64_t ticks;
 #else
-	struct timeval tv;
+  struct timeval tv;
 #endif
 };
 
 struct timeout {
-	unsigned int ms, limit_ms;
-	struct time start, now, end, delta, delta_max;
-	struct timeval delta_tv;
-	bool calls_started, overflow;
+  unsigned int ms, limit_ms;
+  struct time start, now, end, delta, delta_max;
+  struct timeval delta_tv;
+  bool calls_started, overflow;
 };
 
-SP_PRIV void time_get(struct time *time);
-SP_PRIV void time_set_ms(struct time *time, unsigned int ms);
-SP_PRIV void time_add(const struct time *a, const struct time *b, struct time *result);
-SP_PRIV void time_sub(const struct time *a, const struct time *b, struct time *result);
-SP_PRIV bool time_greater(const struct time *a, const struct time *b);
-SP_PRIV void time_as_timeval(const struct time *time, struct timeval *tv);
-SP_PRIV unsigned int time_as_ms(const struct time *time);
-SP_PRIV void timeout_start(struct timeout *timeout, unsigned int timeout_ms);
-SP_PRIV void timeout_limit(struct timeout *timeout, unsigned int limit_ms);
-SP_PRIV bool timeout_check(struct timeout *timeout);
-SP_PRIV void timeout_update(struct timeout *timeout);
-SP_PRIV struct timeval *timeout_timeval(struct timeout *timeout);
-SP_PRIV unsigned int timeout_remaining_ms(struct timeout *timeout);
+SP_PRIV void time_get(struct time* time);
+SP_PRIV void time_set_ms(struct time* time, unsigned int ms);
+SP_PRIV void time_add(const struct time* a, const struct time* b, struct time* result);
+SP_PRIV void time_sub(const struct time* a, const struct time* b, struct time* result);
+SP_PRIV bool time_greater(const struct time* a, const struct time* b);
+SP_PRIV void time_as_timeval(const struct time* time, struct timeval* tv);
+SP_PRIV unsigned int time_as_ms(const struct time* time);
+SP_PRIV void timeout_start(struct timeout* timeout, unsigned int timeout_ms);
+SP_PRIV void timeout_limit(struct timeout* timeout, unsigned int limit_ms);
+SP_PRIV bool timeout_check(struct timeout* timeout);
+SP_PRIV void timeout_update(struct timeout* timeout);
+SP_PRIV struct timeval* timeout_timeval(struct timeout* timeout);
+SP_PRIV unsigned int timeout_remaining_ms(struct timeout* timeout);
 
 #endif
