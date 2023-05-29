@@ -16,6 +16,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 add_library(libserialport ${SOURCES} ${HEADERS})
+set_target_properties(libserialport PROPERTIES COMPILE_FLAGS -fvisibility=hidden)
 
 set(SP_PACKAGE_VERSION_MAJOR 0)
 set(SP_PACKAGE_VERSION_MINOR 1)
