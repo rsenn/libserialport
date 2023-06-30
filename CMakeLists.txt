@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(libserialport LANGUAGES C)
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT MSYS)
     set(SOURCES serialport.c linux.c linux_termios.c timing.c)
 elseif(APPLE)
     set(SOURCES serialport.c macosx.c timing.c)
