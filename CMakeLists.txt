@@ -127,6 +127,11 @@ export(TARGETS libserialport
     FILE "${CMAKE_CURRENT_BINARY_DIR}/libdi2-config.cmake"
     )
 
+    if("${CMAKE_INSTALL_LIBDIR}" STREQUAL "")
+      set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+    endif("${CMAKE_INSTALL_LIBDIR}" STREQUAL "")
+
+      file(MAKE_DIRECTORY "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}")
 install(EXPORT libserialport-config
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}"
     )
